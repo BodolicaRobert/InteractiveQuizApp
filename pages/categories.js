@@ -1,6 +1,6 @@
 import { categories } from '../data'; 
 import Link from 'next/link';
-
+//modificari modul 1
 export default function Categories() {
   return (
     <div className="container">
