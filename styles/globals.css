@@ -28,7 +28,8 @@ h1 {
 }
 
 p {
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   text-align: center;
 }
 
@@ -46,19 +47,14 @@ a {
   color: #ff6f20; /* Portocaliu */
   text-decoration: none;
   font-weight: bold; /* Font mai îndrăzneț */
-  padding: 10px 20px; /* Margini interioare */
+  padding: 5px 10px; /* Margini interioare */
   
   border-radius: 5px; /* Colțuri rotunjite */
   transition: background-color 0.3s ease, color 0.3s ease; /* Tranziție pentru efecte */
   margin: 10px 0; /* Spațiere între link-uri */
 }
 
-/* Efect de hover pentru link */
-a:hover {
-  background-color: #ff6f20; /* Fundal portocaliu */
-  color: #ffffff; /* Text alb */
-  text-decoration: none; /* Eliminăm sublinierea la hover */
-}
+
 
 /* Stil pentru butoane */
 button {
@@ -75,6 +71,7 @@ button {
 
 button:hover {
   background-color: #e65c1b; /* O nuanță mai închisă de portocaliu */
+  
 }
 
 /* Stiluri pentru formular */
@@ -111,4 +108,24 @@ ul.categories li {
 ul.categories li:hover {
   background-color: #ff6f20; /* Fundal portocaliu la hover */
   color: #ffffff; /* Text alb la hover */
+}
+
+.results-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: top;
+  height: 100vh;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.results-container h1 {
+  color: #ff6f20;
+  margin-bottom: 20px;
+}
+
+.results-container p {
+  margin-bottom: 10px;
+  font-size: 18px;
 }
