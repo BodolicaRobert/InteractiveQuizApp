@@ -1,21 +1,49 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from 'react';
 
-import fs from "fs";
-import path from "path";
 
-const Question = ({ quiz, question }) => {
+
+const Question = ({ totalQuestions }) => {
   const router = useRouter();
   const { categoryId, quizId, questionId } = router.query;
 
-  // State pentru răspunsul selectat și feedback
-  const [selectedOption, setSelectedOption] = useState("");
-  const [feedback, setFeedback] = useState("");
-  const [score, setScore] = useState(0); // Punctajul utilizatorului
-  const [isAnswered, setIsAnswered] = useState(false); // Dacă a răspuns la întrebare
-  if (!quiz || !question) {
-    return <h1>Întrebarea nu a fost găsită.</h1>;
-  }
+  const [quiz, setQuiz] = useState(null);
+    const [question, setQuestion] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedOption, setSelectedOption] = useState('');
+    const [isAnswered, setIsAnswered] = useState(false);
+    const [feedback, setFeedback] = useState('');
+    const [score, setScore] = useState(0);
+
+    useEffect(() => {
+        if (quizId) {
+            const fetchQuiz = async () => {
+                try {
+                    const response = await fetch('/api/questions');
+                    const data = await response.json();
+                    console.log(data);
+                    const quizzes = data.quizzes;
+                    // Găsește quiz-ul pe baza quizId
+                    const quizData = quizzes.find(q => q.id === parseInt(quizId));
+                    if (!quizData) {
+                        throw new Error('Quiz-ul nu a fost găsit.');
+                    }
+                    setQuiz(quizData);
+
+                    // Găsește întrebarea pe baza questionId
+                    const questionData = quizData.questions.find(q => q.id === parseInt(questionId));
+                    setQuestion(questionData);
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchQuiz();
+        }
+    }, [quizId, questionId]);
 
   useEffect(() => {
     setIsAnswered(false);
@@ -56,6 +84,10 @@ const Question = ({ quiz, question }) => {
     }
   };
 
+  if (loading) return <h1>Încărcare...</h1>;
+    if (error) return <h1>{error}</h1>;
+    if (!question) return <h1>Întrebarea nu a fost găsită.</h1>;
+
   return (
     <div className="container">
       <h1>{question.text}</h1>
@@ -89,42 +121,5 @@ const Question = ({ quiz, question }) => {
   );
 };
 
-export async function getServerSideProps(context) {
-  const { quizId, questionId } = context.params;
-
-  // Calea către fișierul JSON
-  const filePath = path.join(process.cwd(), "public", "questions.json");
-
-  // Citirea fișierului JSON
-  const jsonData = await fs.promises.readFile(filePath, "utf-8");
-
-  // Parsarea datelor
-  const data = JSON.parse(jsonData);
-
-  // Găsim quiz-ul specific
-  const quiz = data.quizzes.find((q) => q.id.toString() === quizId);
-
-  if (!quiz) {
-    return {
-      notFound: true,
-    };
-  }
-
-  // Găsim întrebarea specifică din quiz
-  const question = quiz.questions.find((q) => q.id.toString() === questionId);
-
-  if (!question) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      quiz,
-      question,
-    },
-  };
-}
 
 export default Question;

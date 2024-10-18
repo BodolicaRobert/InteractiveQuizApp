@@ -1,55 +1,53 @@
+// pages/quiz/[categoryId]/[quizId]/index.js
+
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import fs from 'fs';
-import path from 'path';
-const Quiz = ({quiz}) => {
+
+const Quiz = () => {
     const router = useRouter();
     const { categoryId, quizId } = router.query;
-    console.log(quiz);
-    // Găsește quiz-ul pe baza quizId
-    //const quizz = quizzes.find(q => q.id === parseInt(quizId));
 
-    if (!quiz) {
-        return <h1>Quiz-ul nu a fost găsit.</h1>;
-    }
+    const [quiz, setQuiz] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (categoryId && quizId) {
+            const fetchQuiz = async () => {
+                try {
+                    const response = await fetch('/api/questions');
+                    const data = await response.json();
+                    const quizzes = data.quizzes;
+                    // Găsește quiz-ul pe baza quizId
+                    const quizData = quizzes.find(q => q.id === parseInt(quizId));
+                    if (!quizData) {
+                        throw new Error('Quiz-ul nu a fost găsit.');
+                    }
+                    setQuiz(quizData);
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchQuiz();
+        }
+    }, [categoryId, quizId]);
+
+    if (loading) return <h1>Încărcare...</h1>;
+    if (error) return <h1>{error}</h1>;
 
     return (
         <div className="container">
             <h1>{quiz.name}</h1>
             <p>Întrebările vor apărea aici.</p>
-           
             <Link href={`/quiz/${categoryId}/${quizId}/question/1`}>
                 Începe Quiz-ul
             </Link>
         </div>
     );
 };
-export async function getServerSideProps(context) {
-    const { quizId } = context.params;
 
-    // Calea către fișierul JSON
-    const filePath = path.join(process.cwd(), 'public', 'questions.json');
-    
-    // Citirea fișierului JSON
-    const jsonData = await fs.promises.readFile(filePath, 'utf-8');
-    
-    // Parsarea datelor
-    const data = JSON.parse(jsonData);
-    
-    // Găsim quiz-ul specific
-    const quiz = data.quizzes.find((q) => q.id.toString() === quizId);
-
-    if (!quiz) {
-        return {
-            notFound: true,
-        };
-    }
-
-    return {
-        props: {
-            quiz
-        }
-    };
-}
 export default Quiz;
-
