@@ -40,6 +40,8 @@ ul {
 
 li {
   margin: 10px 0;
+  margin-bottom: 30px;
+  
 }
 
 /* Stiluri pentru link-uri */
@@ -103,10 +105,11 @@ ul.categories li {
   text-align: center; /* Centrarea textului */
   background-color: #ffffff; /* Fundal alb pentru elementele de categorie */
   transition: background-color 0.3s ease; /* Tranziție pentru efecte */
+  color: #ffffff; /* Text alb la hover */
 }
 
 ul.categories li:hover {
-  background-color: #ff6f20; /* Fundal portocaliu la hover */
+  background-color: hsl(21, 51%, 75%); /* Fundal portocaliu la hover */
   color: #ffffff; /* Text alb la hover */
 }
 
@@ -128,4 +131,65 @@ ul.categories li:hover {
 .results-container p {
   margin-bottom: 10px;
   font-size: 18px;
+}
+
+.addQuestionButton {
+  background-color: #ff6f20;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.addQuestionButton:hover {
+  background-color: #e65c1b;
+}
+
+.form {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ff6f20;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  background-color: #f9f9f9;
+}
+
+.form h3 {
+  color: #ff6f20;
+  margin-bottom: 15px;
+}
+
+.form label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.form button {
+  background-color: #ff6f20;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form button:hover {
+  background-color: #e65c1b;
 }
