@@ -17,6 +17,25 @@ const Question = ({ totalQuestions }) => {
     const [score, setScore] = useState(0);
 
     useEffect(() => {
+        const preventBackNavigation = () => {
+          window.history.pushState(null, null, window.location.href); // Setăm URL-ul curent din nou
+        };
+      
+        const handlePopState = () => {
+          router.replace(`/quiz/${categoryId}/${quizId}/question/${questionId}`);
+        };
+      
+        // Inițial setăm istoria și blocăm navigarea înapoi
+        window.history.pushState(null, null, window.location.href);
+        window.addEventListener('popstate', handlePopState);  // Împiedicăm schimbarea URL-ului
+      
+        return () => {
+          window.removeEventListener('popstate', handlePopState);
+        };
+      }, [categoryId, quizId, questionId]);
+      
+    useEffect(() => {
+        
         if (quizId) {
             const fetchQuiz = async () => {
                 try {
@@ -75,9 +94,9 @@ const Question = ({ totalQuestions }) => {
   const handleNextQuestion = () => {
     const nextQuestionId = parseInt(questionId) + 1;
     if (quiz.questions.some((q) => q.id === nextQuestionId)) {
-      router.push(`/quiz/${categoryId}/${quizId}/question/${nextQuestionId}`);    
+      router.replace(`/quiz/${categoryId}/${quizId}/question/${nextQuestionId}`);    
     } else {
-      router.push({
+      router.replace({
         pathname: `/quiz/${categoryId}/${quizId}/results`,
         query: { score, total: quiz.questions.length },
       });
